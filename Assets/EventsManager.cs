@@ -18,16 +18,16 @@ public class EventsManager : MonoBehaviour
         }
     }
 
-    public event Action<int, Boolean> OpenHandTrigger;
-    public event Action<int> CloseHandTrigger;
+    public event Action<int, Boolean> MoveHandTrigger;
+    public event Action<int> UploadImagesTrigger;
 
-    public void OnOpenHandTrigger(int instanceId, Boolean isOpenHand)
+    public void OnHandMovementTrigger(int instanceId, Boolean isOpenHand)
     {
-        OpenHandTrigger?.Invoke(instanceId, isOpenHand);
+        MoveHandTrigger?.Invoke(instanceId, isOpenHand);
     }
 
-    public void OnCloseHandTrigger(int instanceId)
+    public void OnUploadImagesTrigger(int instanceId)
     {
-        CloseHandTrigger?.Invoke(instanceId);
+        UploadImagesTrigger?.Invoke(instanceId);
     }
 }

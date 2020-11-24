@@ -15,6 +15,15 @@ public class ImageClassificationScript : MonoBehaviour
 
     public RawImage rawWebcamTexture;
     public List<string> framesList = new List<string>();
+    //public string uploadImagesUrl = "http://127.0.0.1:5000/uploadImages";
+    public string loginUrl = "http://127.0.0.1:5000/login";
+
+    public string username = "LOGIN";
+    public string password = "SENHA";
+
+    public int framesToRecord = 60;
+    public int sampleRate = 3; // Record one in every three frames
+    public int initialFrame = 120;
 
     private WebCamDevice[] devices;
     private WebCamDevice chosenCamera;
@@ -25,6 +34,7 @@ public class ImageClassificationScript : MonoBehaviour
     private float[] outputs = new float[2];
     private bool isProcessing;
     private int frameCounter = 0;
+    private int framesRecorded = 0;
 
     void Start()
     {
@@ -32,6 +42,7 @@ public class ImageClassificationScript : MonoBehaviour
         outputTextDisplay.text = "Camera Inicializada!";
         StartInterpreter();
         outputTextDisplay.text = "Interpretador Inicializado!";
+        LoginToApi();
     }
 
     void Update()
@@ -41,7 +52,7 @@ public class ImageClassificationScript : MonoBehaviour
             Invoke(cameraTexture);
         }
 
-        if (frameCounter >= 100 && frameCounter <= 124)
+        if (frameCounter >= initialFrame && framesRecorded < framesToRecord)
         {
 
             string dirPath = Application.dataPath + "/../SaveImages/"; //Mudar para Application.persistentDataPath?
@@ -50,14 +61,14 @@ public class ImageClassificationScript : MonoBehaviour
                 Directory.CreateDirectory(dirPath);
             }
 
-            SaveTextureAsPNG(cameraTexture, dirPath + "frame" + (frameCounter - 100));
+            SaveTextureAsPNG(cameraTexture, dirPath + "frame" + (framesRecorded));
         }
 
-        if (frameCounter == 150)
+        /*if (framesRecorded == framesToRecord)
         {
-            StartCoroutine(ApiController.UploadImages(framesList));
-            createVideo();
-        }
+            StartCoroutine(ApiController.UploadImages(framesList, uploadImagesUrl));
+            framesToRecord = 0;
+        }*/
 
         frameCounter++;
     }
@@ -65,6 +76,11 @@ public class ImageClassificationScript : MonoBehaviour
     void OnDestroy()
     {
         interpreter?.Dispose();
+    }
+
+    void LoginToApi()
+    {
+        StartCoroutine(ApiController.Login(username, password, loginUrl));
     }
 
     void SaveTextureAsPNG(WebCamTexture webcamTexture, string dirPath)
@@ -84,19 +100,7 @@ public class ImageClassificationScript : MonoBehaviour
         string base64Tex = System.Convert.ToBase64String(texture.EncodeToPNG());
         //Debug.Log("Base 64:" + base64Tex);
         framesList.Add(base64Tex);
-        Debug.Log("Size: " + framesList.Count);
-    }
-
-    void createVideo()
-    {
-        string output = "video.mp4";
-
-        int framerate = 12;
-        string inputRegex = "../SaveImages/frame%d.png";
-
-        //int rc = FFmpegWrapper.Execute(string.Format("-f {0} -i {1} {2}", inputTest, inputRegex, output));
-        int rc = FFmpegWrapper.Execute(string.Format("-framerate {0} -i {1} {2}", framerate, inputRegex, output));
-        Debug.Log("Return Code is " + rc);
+        framesRecorded++;
     }
 
     void StartCamera()
@@ -150,12 +154,12 @@ public class ImageClassificationScript : MonoBehaviour
         if (outputs[0] > 0.5)
         {
             outputTextDisplay.text = "FECHADA: " + apiResponse.logradouro;//+ (outputs[0] * 100).ToString() + "%";
-            EventsManager.instance.OnOpenHandTrigger(gameObject.GetInstanceID(), false);
+            EventsManager.instance.OnHandMovementTrigger(gameObject.GetInstanceID(), false);
         }
         else
         {
             outputTextDisplay.text = "ABERTA: " + ((1 - outputs[0]) * 100).ToString() + "%";
-            EventsManager.instance.OnOpenHandTrigger(gameObject.GetInstanceID(), true);
+            EventsManager.instance.OnHandMovementTrigger(gameObject.GetInstanceID(), true);
         }
         isProcessing = false;
     }

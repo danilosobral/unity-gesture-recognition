@@ -6,15 +6,24 @@ using UnityEngine;
 
 public class ballController : MonoBehaviour
 {
+    private int aux = 0;
     private GameObject sphereTransform;
     // Start is called before the first frame update
     void Start()
     {
-        EventsManager.instance.OpenHandTrigger += increaseSize;
-        EventsManager.instance.CloseHandTrigger += decreaseSize;
+        EventsManager.instance.MoveHandTrigger += changeSize;
     }
 
-    private void increaseSize(int id, Boolean isOpenHand)
+    void Update()
+    {
+        aux += 1;
+        if(aux == 250)
+        {
+            EventsManager.instance.OnUploadImagesTrigger(gameObject.GetInstanceID());
+        }
+    }
+
+    private void changeSize(int id, Boolean isOpenHand)
     {
         if (isOpenHand)
         {
@@ -24,10 +33,5 @@ public class ballController : MonoBehaviour
             transform.localScale = new Vector3(1f, 1f, 1f);
         }
         
-    }
-
-    private void decreaseSize(int id)
-    {
-        transform.localScale = new Vector3(1f, 1f, 1f);
     }
 }

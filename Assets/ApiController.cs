@@ -9,12 +9,14 @@ using UnityEngine.Networking;
 public class ApiController : MonoBehaviour
 {
 
-    public string cep;
+    public string uploadImagesUrl = "http://127.0.0.1:5000/uploadImages";
     public GameObject imageClassGameObject;
+
     // Start is called before the first frame update
     void Start()
     {
-        CheckApiData();
+        //CheckApiData();
+        EventsManager.instance.UploadImagesTrigger += requestImageUpload;
     }
 
     // Update is called once per frame
@@ -23,33 +25,24 @@ public class ApiController : MonoBehaviour
         
     }
 
-    public static IEnumerator UploadImages(List<string> frames)
+    public void requestImageUpload(int id)
     {
-        /*string[] framesArray = frames.ToArray();
-        UploadImageRequest requestBody = new UploadImageRequest();
-        requestBody.frames = framesArray;
-        string requestJson = JsonUtility.ToJson(requestBody);
-        Debug.Log(requestJson);
+        Debug.Log("Start Images Upload");
+        ImageClassificationScript imageClassification = imageClassGameObject.GetComponent<ImageClassificationScript>();
+        List<string> framesList = imageClassification.framesList;
+        StartCoroutine(UploadImages(framesList, uploadImagesUrl));
+    }
 
-        byte[] jsonToSend = new System.Text.UTF8Encoding().GetBytes(requestJson);
+    public static IEnumerator Login(string username, string password, string url)
+    {
+        LoginRequest requestBody = new LoginRequest();
+        requestBody.email = username;
+        requestBody.password = password;
+        requestBody.remember_login = false;
 
-        UnityWebRequest www = UnityWebRequest.Post("url", jsonToSend));
-
-        uwr.uploadHandler = (UploadHandler)new UploadHandlerRaw(jsonToSend);
-        uwr.downloadHandler = (DownloadHandler)new DownloadHandlerBuffer();
-        uwr.SetRequestHeader("Content-Type", "application/json");*/
-
-        
-
-        List<IMultipartFormSection> formData = new List<IMultipartFormSection>();
-        for(int i = 0; i < frames.Count; i++)
-        {
-            formData.Add(new MultipartFormDataSection("frame" + i, frames[i]));
-        }
-
-        Debug.Log("form data");
-        Debug.Log(formData.Count);
-        UnityWebRequest www = UnityWebRequest.Post("URL", formData);
+        string requestString = JsonUtility.ToJson(requestBody) ?? "";
+        UnityWebRequest www = UnityWebRequest.Put(url, requestString);
+        www.SetRequestHeader("Content-Type", "application/json");
         yield return www.SendWebRequest();
 
         if (www.isNetworkError || www.isHttpError)
@@ -58,13 +51,22 @@ public class ApiController : MonoBehaviour
         }
         else
         {
-            Debug.Log("Form upload complete!");
+            Dictionary<string, string> dict = www.GetResponseHeaders();
+            foreach (KeyValuePair<string, string> header in dict)
+            {
+                Debug.Log(header.Key + " = " + header.Value);
+            }
+
+            Debug.Log("Login complete!");
         }
 
-        /*formData.Add(new MultipartFormDataSection("field1=foo&field2=bar"));
-        formData.Add(new MultipartFormFileSection("my file data", "myfile.txt"));
 
-        UnityWebRequest www = UnityWebRequest.Post("http://www.my-server.com/myform", formData);
+        /*WWWForm form = new WWWForm();
+        form.AddField("login", username);
+        form.AddField("password", password);
+
+        UnityWebRequest www = UnityWebRequest.Post(url, form);
+
         yield return www.SendWebRequest();
 
         if (www.isNetworkError || www.isHttpError)
@@ -73,11 +75,39 @@ public class ApiController : MonoBehaviour
         }
         else
         {
+            Dictionary<string, string> dict = www.GetResponseHeaders();
+            foreach (KeyValuePair<string, string> header in dict)
+            {
+                Debug.Log(header.Key + " = " + header.Value);
+            }
+
             Debug.Log("Form upload complete!");
         }*/
     }
 
-    public void CheckApiData()
+    public static IEnumerator UploadImages(List<string> frames, string url)
+    {
+        WWWForm form = new WWWForm();
+        for (int i = 0; i < frames.Count; i++)
+        {
+            form.AddField("frame" + i, frames[i]);
+        }
+
+        UnityWebRequest www = UnityWebRequest.Post(url, form);
+        yield return www.SendWebRequest();
+
+        if (www.isNetworkError || www.isHttpError)
+        {
+            Debug.Log(www.error);
+        }
+        else
+        {
+            Debug.Log("Form upload complete!");
+        }
+
+    }
+
+    /*public void CheckApiData()
     {
         //ImageClassificationScript imageClassification = imageClassGameObject.GetComponent<ImageClassificationScript>();
         //imageClassification.apiResponse = GetApiData();
@@ -86,7 +116,8 @@ public class ApiController : MonoBehaviour
 
     IEnumerator GetApiDataUnity()
     {
-        UnityWebRequest www = UnityWebRequest.Get(String.Format("http://viacep.com.br/ws/{0}/json", cep));
+        UnityWebRequest www = UnityWebRequest.Get(String.Format("http://127.0.0.1:5000/address?cep={0}", "05725060"));
+        //UnityWebRequest www = UnityWebRequest.Get(String.Format("http://viacep.com.br/ws/{0}/json", cep));
         yield return www.SendWebRequest();
 
         if (www.isNetworkError || www.isHttpError)
@@ -106,12 +137,12 @@ public class ApiController : MonoBehaviour
 
     private ApiResponse GetApiData()
     {
-        HttpWebRequest request = (HttpWebRequest)WebRequest.Create(String.Format("http://viacep.com.br/ws/{0}/json", cep));
+        HttpWebRequest request = (HttpWebRequest)WebRequest.Create(String.Format("http://viacep.com.br/ws/{0}/json", "05725060"));
         HttpWebResponse response = (HttpWebResponse)request.GetResponse();
         StreamReader reader = new StreamReader(response.GetResponseStream());
         string jsonResponse = reader.ReadToEnd();
         ApiResponse info = JsonUtility.FromJson<ApiResponse>(jsonResponse);
         return info;
-    }
+    }*/
 
 }

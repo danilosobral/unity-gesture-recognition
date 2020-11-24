@@ -436,7 +436,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86f0a35a67834a34cbe3d4f0426dcee8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cep: 05725060
   imageClassGameObject: {fileID: 904363781}
 --- !u!4 &682734379
 Transform:
@@ -588,6 +587,14 @@ MonoBehaviour:
     ddd: 
     siafi: 
   rawWebcamTexture: {fileID: 0}
+  framesList: []
+  uploadImagesUrl: http://127.0.0.1:5000/api/v1/patient/link
+  loginUrl: http://127.0.0.1:5000/api/v1/login
+  username: teste@teste.com
+  password: 12345678
+  framesToRecord: 60
+  sampleRate: 3
+  initialFrame: 120
 --- !u!4 &904363783
 Transform:
   m_ObjectHideFlags: 0
