@@ -51,21 +51,21 @@ Finally, set the URL's to your custom endpoints for login and image uploading (v
 Assign the script `EventsManager` to the third `GameObject` you have added to your scene. This is responsible for signalling your game that the player's hand is opened or closed, as well as activating the `ApiController`, so it sends the requests for Login and imageUpload, when the game triggers it.
 
 #### Events triggered by the game
-* Login
+* **Login**:
 When your game needs to login to the back-end server, trigger the Login event, by using the following command, where `login` and `password` are `strings` and `remeber_login` is `bool`
 ```
 EventsManager.instance.OnLoginTrigger(gameObject.GetInstanceID(), login, password, remember_login);
 ```
 
-* Upload Images
-When your game needs to send the video to the back-end server, trigger the uplaodImages event, by using the following command
+* **Upload Images**:
+ When your game needs to send the video to the back-end server, trigger the uplaodImages event, by using the following command
 ```
 EventsManager.instance.OnUploadImagesTrigger(gameObject.GetInstanceID());
 ```
 
 #### Events triggered by the package
-* Hand movement detected
-When the package detects that the player has the hand opened or closed, it will trigger the MoveHand event. To detect it, add the following line to the `Start()` function.
+* **Hand movement detected**:
+ When the package detects that the player has the hand opened or closed, it will trigger the MoveHand event. To detect it, add the following line to the `Start()` function.
 ```
 EventsManager.instance.MoveHandTrigger += HandMovementDetected;
 ```
@@ -83,3 +83,18 @@ private void HandMovementDetected(int id, Boolean isOpenHand)
     }
 }
 ```
+
+## Building the package
+
+Because of the TensorFlow Lite Plugin's limitations, this pacakge is only suitable for Androids with ARM64 Architecture.
+
+In order to build the project for Android, follow the steps:
+* Select 'File' > 'Build Settings...'
+* Select the Android Platform
+* Press 'Player Settings...'
+* This will open the 'Project Settings' Tab. With 'Player' selected, scroll until the 'Other Settings' panel and expand it
+* In this panel, ensure that the 'Scripting Backend' property is set to 'IL2CPP'
+* In this panel, ensure that the 'ARM64' target architecture is checked and 'ARMv7' is unchecked
+* Close the 'Project Settings' Tab
+* Press 'Switch Platform'
+* Press 'Build and Run'
