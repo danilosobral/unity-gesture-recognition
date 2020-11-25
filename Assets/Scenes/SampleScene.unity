@@ -298,6 +298,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9ca0fc703303054eafe48639891fcf3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  login: LOGIN
+  password: SENHA
+  remember_login: 0
 --- !u!1 &134854941
 GameObject:
   m_ObjectHideFlags: 0
@@ -436,6 +439,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86f0a35a67834a34cbe3d4f0426dcee8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  uploadImagesUrl: http://192.168.10.15:5000/uploadImages
+  loginUrl: http://192.168.10.15:5000/login
   imageClassGameObject: {fileID: 904363781}
 --- !u!4 &682734379
 Transform:
@@ -575,23 +580,8 @@ MonoBehaviour:
   cameraDisplay: {fileID: 58677458}
   outputTextDisplay: {fileID: 937782174}
   fileName: hand_gesture_model.tflite
-  apiResponse:
-    cep: 
-    logradouro: 
-    complemento: 
-    bairro: 
-    localidade: 
-    uf: 
-    ibge: 
-    gia: 
-    ddd: 
-    siafi: 
   rawWebcamTexture: {fileID: 0}
   framesList: []
-  uploadImagesUrl: http://127.0.0.1:5000/api/v1/patient/link
-  loginUrl: http://127.0.0.1:5000/api/v1/login
-  username: teste@teste.com
-  password: 12345678
   framesToRecord: 60
   sampleRate: 3
   initialFrame: 120

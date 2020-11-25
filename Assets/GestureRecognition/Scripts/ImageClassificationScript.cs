@@ -11,7 +11,6 @@ public class ImageClassificationScript : MonoBehaviour
     [SerializeField] RawImage cameraDisplay;
     [SerializeField] Text outputTextDisplay;
     [SerializeField] string fileName = "hand_gesture_model.tflite";
-    [SerializeField] public ApiResponse apiResponse;
 
     public RawImage rawWebcamTexture;
     public List<string> framesList = new List<string>();
@@ -155,7 +154,7 @@ public class ImageClassificationScript : MonoBehaviour
 
         if (outputs[0] > 0.5)
         {
-            outputTextDisplay.text = "FECHADA: " + apiResponse.logradouro;//+ (outputs[0] * 100).ToString() + "%";
+            outputTextDisplay.text = "FECHADA: " + (outputs[0] * 100).ToString() + "%";
             EventsManager.instance.OnHandMovementTrigger(gameObject.GetInstanceID(), false);
         }
         else

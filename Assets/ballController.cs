@@ -6,8 +6,14 @@ using UnityEngine;
 
 public class ballController : MonoBehaviour
 {
+
+    public string login = "LOGIN";
+    public string password = "SENHA";
+    public bool remember_login = false;
+
     private int aux = 0;
     private GameObject sphereTransform;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -19,6 +25,7 @@ public class ballController : MonoBehaviour
         aux += 1;
         if(aux == 250)
         {
+            EventsManager.instance.OnLoginTrigger(gameObject.GetInstanceID(), login, password, remember_login);
             EventsManager.instance.OnUploadImagesTrigger(gameObject.GetInstanceID());
         }
     }
