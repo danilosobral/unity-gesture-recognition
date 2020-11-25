@@ -52,7 +52,7 @@ public class ImageClassificationScript : MonoBehaviour
 
         if (frameCounter >= initialFrame && framesRecorded < framesToRecord)
         {
-            SaveTextureAsPNG(cameraTexture);
+            //SaveTextureAsPNG(cameraTexture);
             AddToFrameList(cameraTexture);
         }
 
