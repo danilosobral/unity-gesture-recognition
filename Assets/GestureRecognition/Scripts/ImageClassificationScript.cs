@@ -14,10 +14,6 @@ public class ImageClassificationScript : MonoBehaviour
 
     public RawImage rawWebcamTexture;
     public List<string> framesList = new List<string>();
-    
-    //public string loginUrl = "http://127.0.0.1:5000/login";
-    //public string username = "LOGIN";
-    //public string password = "SENHA";
 
     public int framesToRecord = 60;
     public int sampleRate = 3; // Record one in every three frames
@@ -37,10 +33,7 @@ public class ImageClassificationScript : MonoBehaviour
     void Start()
     {
         StartCamera();
-        outputTextDisplay.text = "Camera Inicializada!";
         StartInterpreter();
-        outputTextDisplay.text = "Interpretador Inicializado!";
-        //LoginToApi();
     }
 
     void Update()
@@ -50,23 +43,20 @@ public class ImageClassificationScript : MonoBehaviour
             Invoke(cameraTexture);
         }
 
-        if (frameCounter >= initialFrame && framesRecorded < framesToRecord)
+        if (frameCounter >= initialFrame && framesRecorded < framesToRecord && frameCounter % sampleRate == 0)
         {
             //SaveTextureAsPNG(cameraTexture);
             AddToFrameList(cameraTexture);
         }
 
-        frameCounter++;
+        if (framesRecorded >= framesToRecord)
+            frameCounter++;
     }
 
     void OnDestroy()
     {
+        cameraTexture.Stop();
         interpreter?.Dispose();
-    }
-
-    void LoginToApi()
-    {
-        //StartCoroutine(ApiController.Login(username, password, loginUrl));
     }
 
     void AddToFrameList(WebCamTexture webcamTexture)
@@ -78,14 +68,13 @@ public class ImageClassificationScript : MonoBehaviour
         texture.Apply();
 
         string base64Tex = System.Convert.ToBase64String(texture.EncodeToPNG());
-        //Debug.Log("Base 64:" + base64Tex);
         framesList.Add(base64Tex);
         framesRecorded++;
     }
 
     void SaveTextureAsPNG(WebCamTexture webcamTexture)
     {
-        string dirPath = Application.dataPath + "/../SaveImages/"; //Mudar para Application.persistentDataPath?
+        string dirPath = Application.dataPath + "/../SaveImages/";
         if (!Directory.Exists(dirPath))
         {
             Directory.CreateDirectory(dirPath);
@@ -114,18 +103,17 @@ public class ImageClassificationScript : MonoBehaviour
         }
         cameraTexture = new WebCamTexture(chosenCamera.name, 128, 128, 60);
         cameraTexture.Play();
-        cameraDisplay.texture = cameraTexture;
+        if (cameraDisplay != null)
+            cameraDisplay.texture = cameraTexture;
     }
 
     void StartInterpreter()
     {
-        
         var options = new InterpreterOptions()
         {
             threads = 2,
             useNNAPI = false,
         };
-        outputTextDisplay.text = "AQUI";
         interpreter = new Interpreter(FileUtil.LoadFile(fileName), options);
         interpreter.ResizeInputTensor(0, new int[] { 1, 128, 128, 1 });
         interpreter.AllocateTensors();
@@ -154,12 +142,14 @@ public class ImageClassificationScript : MonoBehaviour
 
         if (outputs[0] > 0.5)
         {
-            outputTextDisplay.text = "FECHADA: " + (outputs[0] * 100).ToString() + "%";
+            if (outputTextDisplay != null)
+                outputTextDisplay.text = "FECHADA: " + (outputs[0] * 100).ToString() + "%";
             EventsManager.instance.OnHandMovementTrigger(gameObject.GetInstanceID(), false);
         }
         else
         {
-            outputTextDisplay.text = "ABERTA: " + ((1 - outputs[0]) * 100).ToString() + "%";
+            if (outputTextDisplay != null) 
+                outputTextDisplay.text = "ABERTA: " + ((1 - outputs[0]) * 100).ToString() + "%";
             EventsManager.instance.OnHandMovementTrigger(gameObject.GetInstanceID(), true);
         }
         isProcessing = false;
