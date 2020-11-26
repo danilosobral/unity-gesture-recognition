@@ -1,4 +1,4 @@
-# temp-unity-connection
+# unity-gesture-recognition
 
 Project example of how to add the GestureRecognitionPackage to a Unity project
 
@@ -32,10 +32,11 @@ Project example of how to add the GestureRecognitionPackage to a Unity project
   
 ## Using the package
 
-To use this package, you will need to add three empty `GameObjects` to your scene.
+To use this package, you will need to go into the `Prefabs` directory and add the `Gesture Recognition Asset Prefab` to your scene. It will contain three different scipts with some parameters that can be modified.
 
 ### Image Classification 
-Assign the script `ImageClassificationScript` to the first one. This will be responsible for connecting to the device's camera and running the inference, which will allow you to detect open or closed hands.
+
+This script is responsible for connecting to the device's camera and running the inference, which will allow you to detect open or closed hands.
 
 If you want to render the image captured inside your game, assign a `RawImage` to its `Camera Display` attribute.
 
@@ -43,12 +44,13 @@ By default, the video capture uses the parameters of `Frames to Record = 60` and
 
 ### Api Controller
 
-Assign the script `ApiController` to the second `GameObject` you have added to your scene. It will be responsible for connecting to your API.
-Assig the `Image Classification Game Object` that you have set up in the previous step to the `Api Controller`'s `ImageClassGameObject` attribute.
-Finally, set the URL's to your custom endpoints for login and image uploading (video capturing).
+This script is responsible for connecting to your API.
+The only parameters that need to be set are the URLs to your custom endpoints for login and image uploading (video capturing).
+
+_Obs: If you want to use this script independently from the `Gesture Recognition Prefab`, make sure you assign an `Game Object` that you have set up with the `ImageClassificationScript` to the `ImageClassGameObject` attribute._
 
 ### Events Manager
-Assign the script `EventsManager` to the third `GameObject` you have added to your scene. This is responsible for signalling your game that the player's hand is opened or closed, as well as activating the `ApiController`, so it sends the requests for Login and imageUpload, when the game triggers it.
+This script is responsible for signalling your game that the player's hand is opened or closed, as well as activating the `ApiController`, so it sends the requests for Login and imageUpload, when the game triggers it. There are no parameters to be set.
 
 #### Events triggered by the game
 * **Login**:
