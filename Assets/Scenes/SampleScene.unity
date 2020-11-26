@@ -583,7 +583,6 @@ MonoBehaviour:
   rawWebcamTexture: {fileID: 0}
   framesList: []
   framesToRecord: 60
-  sampleRate: 3
   initialFrame: 120
 --- !u!4 &904363783
 Transform:
