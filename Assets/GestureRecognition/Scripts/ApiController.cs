@@ -64,6 +64,8 @@ public class ApiController : MonoBehaviour
             form.AddField("frame" + i, frames[i]);
         }
 
+        form.AddField("fps", Screen.currentResolution.refreshRate);
+
         UnityWebRequest www = UnityWebRequest.Post(url, form);
         yield return www.SendWebRequest();
 

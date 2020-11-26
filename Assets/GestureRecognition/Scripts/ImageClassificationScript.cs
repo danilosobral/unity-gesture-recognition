@@ -16,7 +16,6 @@ public class ImageClassificationScript : MonoBehaviour
     public List<string> framesList = new List<string>();
 
     public int framesToRecord = 60;
-    public int sampleRate = 3; // Record one in every three frames
     public int initialFrame = 120;
 
     private WebCamDevice[] devices;
@@ -43,13 +42,13 @@ public class ImageClassificationScript : MonoBehaviour
             Invoke(cameraTexture);
         }
 
-        if (frameCounter >= initialFrame && framesRecorded < framesToRecord && frameCounter % sampleRate == 0)
+        if (frameCounter >= initialFrame && framesRecorded < framesToRecord)
         {
             //SaveTextureAsPNG(cameraTexture);
             AddToFrameList(cameraTexture);
         }
 
-        if (framesRecorded >= framesToRecord)
+        if (framesRecorded <= framesToRecord)
             frameCounter++;
     }
 
