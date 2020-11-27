@@ -86,6 +86,16 @@ private void HandMovementDetected(int id, Boolean isOpenHand)
 }
 ```
 
+Sometimes, you may want your game to stop taking a certain action after an event. In this case, add the following line.
+```
+EventsManager.instance.<EventName> -= <ActionAfterEvent>;
+```
+
+For example, if you want your game to stop calling `HandMovementDetected` after the `MoveHandTrigger` event, you would add
+```
+EventsManager.instance.MoveHandTrigger -= HandMovementDetected;
+```
+
 ## Building the package
 
 Because of the TensorFlow Lite Plugin's limitations, this pacakge is only suitable for Androids with ARM64 Architecture.
