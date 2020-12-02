@@ -439,8 +439,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86f0a35a67834a34cbe3d4f0426dcee8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  uploadImagesUrl: http://192.168.10.15:5000/uploadImages
-  loginUrl: http://192.168.10.15:5000/login
+  uploadImagesUrl: http://127.0.0.1:5000/uploadImages
+  loginUrl: http://127.0.0.1:5000/login
+  customParametersUrl: http://127.0.0.1:5000/customParameters
   imageClassGameObject: {fileID: 904363781}
 --- !u!4 &682734379
 Transform:

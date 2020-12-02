@@ -11,6 +11,7 @@ public class ApiController : MonoBehaviour
 
     public string uploadImagesUrl = "http://127.0.0.1:5000/uploadImages";
     public string loginUrl = "http://127.0.0.1:5000/login";
+    public string customParametersUrl = "http://127.0.0.1:5000/customParameters";
     public GameObject imageClassGameObject;
 
     // Start is called before the first frame update
@@ -18,6 +19,7 @@ public class ApiController : MonoBehaviour
     {
         EventsManager.instance.UploadImagesTrigger += requestImageUpload;
         EventsManager.instance.LoginTrigger += requestLogin;
+        EventsManager.instance.GetParametersRequestTrigger += requestCustomParameters;
     }
 
     public void requestLogin(int id, string username, string password, bool remember_login)
@@ -78,5 +80,34 @@ public class ApiController : MonoBehaviour
             Debug.Log("Upload images complete!");
         }
 
+    }
+
+    public void requestCustomParameters(int id)
+    {
+        Debug.Log("Start Get Custom Parameters");
+        StartCoroutine(GetCustomParameters(customParametersUrl, this.CustomParametersCallback));
+    }
+
+    private static IEnumerator GetCustomParameters(string url, Action<CustomParametersResponse> callback=null)
+    {
+        UnityWebRequest www = UnityWebRequest.Get(url);
+        yield return www.SendWebRequest();
+
+        if (www.isNetworkError || www.isHttpError)
+        {
+            Debug.Log(www.error);
+        }
+        else
+        {
+            // Show results as text
+            Debug.Log(www.downloadHandler.text);
+            CustomParametersResponse info = JsonUtility.FromJson<CustomParametersResponse>(www.downloadHandler.text);
+            callback(info);
+        }
+    }
+
+    private void CustomParametersCallback(CustomParametersResponse response)
+    {
+        EventsManager.instance.OnGetParametersResponseTrigger(gameObject.GetInstanceID(), response);
     }
 }

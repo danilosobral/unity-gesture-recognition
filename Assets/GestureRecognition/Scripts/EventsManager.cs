@@ -21,6 +21,8 @@ public class EventsManager : MonoBehaviour
     public event Action<int, Boolean> MoveHandTrigger;
     public event Action<int> UploadImagesTrigger;
     public event Action<int, string, string, bool> LoginTrigger;
+    public event Action<int> GetParametersRequestTrigger;
+    public event Action<int, CustomParametersResponse> GetParametersResponseTrigger;
 
     public void OnHandMovementTrigger(int instanceId, Boolean isOpenHand)
     {
@@ -35,5 +37,15 @@ public class EventsManager : MonoBehaviour
     public void OnLoginTrigger(int instanceId, string username, string password, bool remember_login)
     {
         LoginTrigger?.Invoke(instanceId, username, password, remember_login);
+    }
+
+    public void OnGetParametersRequestTrigger(int instanceId)
+    {
+        GetParametersRequestTrigger?.Invoke(instanceId);
+    }
+
+    public void OnGetParametersResponseTrigger(int instanceId, CustomParametersResponse response)
+    {
+        GetParametersResponseTrigger?.Invoke(instanceId, response);
     }
 }
