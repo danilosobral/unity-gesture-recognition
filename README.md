@@ -65,6 +65,18 @@ EventsManager.instance.OnLoginTrigger(gameObject.GetInstanceID(), login, passwor
 EventsManager.instance.OnUploadImagesTrigger(gameObject.GetInstanceID());
 ```
 
+* **Request Custom Parameters**:
+ When your game needs to ask the back-end server for the custom parameters for the user, trigger the getParametersRequest event, by using the following line
+```
+EventsManager.instance.OnGetParametersRequestTrigger(gameObject.GetInstanceID());
+```
+When the request is done, the game will generate another event, to which you must listen. To configure your game to listen to the response event, add the following line to the `Start()`.
+```
+EventsManager.instance.GetParametersResponseTrigger += SetCustomParameters;
+```
+
+`SetCustomParameters` is a function that you must create in the same file as the previous line and will execute when the event gets triggered. It recieves an object that is set to your custom parameters in the `CustomParametersResponse` class in the `Classes` folder. Make sure to configure its attributes according to the response of your API!
+
 #### Events triggered by the package
 * **Hand movement detected**:
  When the package detects that the player has the hand opened or closed, it will trigger the MoveHand event. To detect it, add the following line to the `Start()` function.
