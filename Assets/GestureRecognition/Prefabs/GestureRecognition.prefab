@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5689531940359023837}
   - component: {fileID: 5689531940359023834}
   - component: {fileID: 5689531940359023835}
-  - component: {fileID: 5689531940359023832}
+  - component: {fileID: 3520904874957707250}
   m_Layer: 0
   m_Name: GestureRecognition
   m_TagString: Untagged
@@ -47,6 +47,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   uploadImagesUrl: http://127.0.0.1:5000/uploadImages
   loginUrl: http://127.0.0.1:5000/login
+  customParametersUrl: http://127.0.0.1:5000/customParameters
   imageClassGameObject: {fileID: 5689531940359023833}
 --- !u!114 &5689531940359023835
 MonoBehaviour:
@@ -60,7 +61,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd753601c03482e44a66c170db5cb991, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &5689531940359023832
+--- !u!114 &3520904874957707250
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -77,6 +78,5 @@ MonoBehaviour:
   fileName: hand_gesture_model.tflite
   rawWebcamTexture: {fileID: 0}
   framesList: []
-  framesToRecord: 60
-  sampleRate: 3
+  framesToRecord: 150
   initialFrame: 120

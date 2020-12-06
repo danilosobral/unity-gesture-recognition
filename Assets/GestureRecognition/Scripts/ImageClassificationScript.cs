@@ -15,7 +15,7 @@ public class ImageClassificationScript : MonoBehaviour
     public RawImage rawWebcamTexture;
     public List<string> framesList = new List<string>();
 
-    public int framesToRecord = 60;
+    public int framesToRecord = 150;
     public int initialFrame = 120;
 
     private WebCamDevice[] devices;
